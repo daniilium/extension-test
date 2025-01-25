@@ -1,4 +1,4 @@
-import { canShow, saveCloseClick } from './api'
+import { canShow, saveCloseClick, trackVisit } from './api'
 import { intervalFetchDomainList } from './intervalFetchDomainList'
 
 export default defineBackground(() => {
@@ -20,6 +20,11 @@ export default defineBackground(() => {
 
         if (message.type === 'saveCloseClick') {
           await saveCloseClick(message.currentDomain)
+          sendResponse({ status: 'success' })
+        }
+
+        if (message.type === 'trackVisit') {
+          await trackVisit(message.domain)
           sendResponse({ status: 'success' })
         }
       } catch {

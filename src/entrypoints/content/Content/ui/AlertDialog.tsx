@@ -8,7 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+} from '@/shared/ui/alert-dialog'
 import { getCurrentDomain } from '@/shared/lib'
 
 type Props = {

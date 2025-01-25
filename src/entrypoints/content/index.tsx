@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { ContentScriptContext } from 'wxt/client'
 import '~/assets/tailwind.css'
 
-import { App, isDomainInList } from './App'
+import { Content, isDomainInList } from './Content'
 import { getCurrentDomain } from '@/shared/lib'
 
 async function mountApp(ctx: ContentScriptContext) {
@@ -19,7 +19,7 @@ async function mountApp(ctx: ContentScriptContext) {
       const root = ReactDOM.createRoot(wrapper)
       root.render(
         <React.StrictMode>
-          <App />
+          <Content />
         </React.StrictMode>
       )
       return { root, wrapper }
@@ -39,6 +39,13 @@ export default defineContentScript({
   cssInjectionMode: 'ui',
   async main(ctx) {
     const inList = await isDomainInList()
+
+    if (inList) {
+      browser.runtime.sendMessage({
+        type: 'trackVisit',
+        domain: getCurrentDomain(),
+      })
+    }
 
     const canShow = await browser.runtime.sendMessage({
       type: 'canShow',

@@ -10,6 +10,10 @@ export type Domain = {
   text: string
 }
 
+type DomainMeta = {
+  lastUpdated: number
+}
+
 async function fetchDomainList() {
   try {
     const response = await fetch('https://config-tool.ru/ext.json')
@@ -17,7 +21,9 @@ async function fetchDomainList() {
     if (!sites.ok) throw new Error('Failed to fetch sites')
 
     await storage.setItem<Domain[]>(LOCAL_DOMAINS_LIST, sites.data)
-    await storage.setMeta(LOCAL_DOMAINS_LIST, { lastUpdated: Date.now() })
+    await storage.setMeta<DomainMeta>(LOCAL_DOMAINS_LIST, {
+      lastUpdated: Date.now(),
+    })
   } catch (error) {
     console.error('Failed to fetch sites:', error)
   }
@@ -25,10 +31,8 @@ async function fetchDomainList() {
 
 async function firstInitApp() {
   try {
-    const meta = await storage.getMeta<{ lastUpdated: number }>(
-      LOCAL_DOMAINS_LIST
-    )
-    const lastUpdated = meta?.lastUpdated
+    const meta = await storage.getMeta<DomainMeta>(LOCAL_DOMAINS_LIST)
+    const lastUpdated = meta.lastUpdated
     const currentTime = Date.now()
 
     if (!lastUpdated || currentTime - lastUpdated > FETCH_DELAY_MS) {
@@ -55,7 +59,3 @@ export async function intervalFetchDomainList() {
 
   firstInitApp()
 }
-
-browser.runtime.onSuspend.addListener(() => {
-  chrome.alarms.clear(ALARM_FETCH_DOMAINS)
-})

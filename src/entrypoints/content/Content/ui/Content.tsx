@@ -1,7 +1,7 @@
 import { getDomainText } from '../api'
 import AlertDialog from './AlertDialog'
 
-export default function App() {
+export default function Content() {
   const [text, setText] = useState<string | null>(null)
 
   useEffect(() => {

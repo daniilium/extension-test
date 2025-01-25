@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  AlertDialog,
+  AlertDialog as AlertDialogShadcn,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -9,17 +9,24 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { saveCloseClick } from '@/entrypoints/background/saveCloseClick'
+import { getCurrentDomain } from '@/shared/lib'
 
 type Props = {
   text: string
 }
 
-export default function AlertDialogDemo({ text }: Props) {
+export default function AlertDialog({ text }: Props) {
   const [isOpen, setIsOpen] = useState(true)
 
+  const handleSaveCloseClick = async () => {
+    await browser.runtime.sendMessage({
+      type: 'saveCloseClick',
+      currentDomain: getCurrentDomain(),
+    })
+  }
+
   return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+    <AlertDialogShadcn open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -27,12 +34,12 @@ export default function AlertDialogDemo({ text }: Props) {
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => saveCloseClick()}>
+          <AlertDialogCancel onClick={() => handleSaveCloseClick()}>
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
-    </AlertDialog>
+    </AlertDialogShadcn>
   )
 }

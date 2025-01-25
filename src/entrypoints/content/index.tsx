@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client'
 import { ContentScriptContext } from 'wxt/client'
 import '~/assets/tailwind.css'
 
-import { App } from './App'
-import { isDomainInList } from './App/api/isDomainInList'
+import { App, isDomainInList } from './App'
+import { getCurrentDomain } from '@/shared/lib'
 
 async function mountApp(ctx: ContentScriptContext) {
   const ui = await createShadowRootUi(ctx, {
@@ -39,8 +39,12 @@ export default defineContentScript({
   cssInjectionMode: 'ui',
   async main(ctx) {
     const inList = await isDomainInList()
-    console.log('inList', inList)
 
-    if (inList) mountApp(ctx)
+    const canShow = await browser.runtime.sendMessage({
+      type: 'canShow',
+      currentDomain: getCurrentDomain(),
+    })
+
+    if (inList && canShow) mountApp(ctx)
   },
 })

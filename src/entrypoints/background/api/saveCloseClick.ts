@@ -2,10 +2,9 @@ import {
   LOCAL_MESSAGE_CLOSED_KEY,
   SESSION_MESSAGE_CLICK_COUNT_KEY,
 } from '@/entrypoints/background/constants'
-import { getCurrentDomain, getSiteKey } from '@/shared/lib'
+import { getSiteKey } from '@/shared/lib'
 
-export async function saveCloseClick() {
-  const currentDomain = getCurrentDomain()
+export async function saveCloseClick(currentDomain: string) {
   const clickCount =
     (await storage.getItem<number>(
       getSiteKey(SESSION_MESSAGE_CLICK_COUNT_KEY, currentDomain)

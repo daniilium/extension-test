@@ -5,8 +5,9 @@ import '~/assets/tailwind.css'
 
 import { Content, isDomainInList } from './Content'
 import { getCurrentDomain } from '@/shared/lib'
+import { siteBadgesInSearchResults } from './siteBadgesInSearchResults'
 
-async function mountApp(ctx: ContentScriptContext) {
+async function mountReactApp(ctx: ContentScriptContext) {
   const ui = await createShadowRootUi(ctx, {
     name: 'content-script',
     position: 'inline',
@@ -35,9 +36,11 @@ async function mountApp(ctx: ContentScriptContext) {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default defineContentScript({
-  matches: ['*://*/*'],
+  matches: ['<all_urls>'],
   cssInjectionMode: 'ui',
   async main(ctx) {
+    siteBadgesInSearchResults(ctx)
+
     const inList = await isDomainInList()
 
     if (inList) {
@@ -52,6 +55,6 @@ export default defineContentScript({
       currentDomain: getCurrentDomain(),
     })
 
-    if (inList && canShow) mountApp(ctx)
+    if (inList && canShow) mountReactApp(ctx)
   },
 })

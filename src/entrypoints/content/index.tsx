@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import "~/assets/tailwind.css";
 
 import { Question } from './Question';
+import React from 'react';
 
 
 export default defineContentScript({
@@ -20,7 +21,11 @@ export default defineContentScript({
               container.append(wrapper);
       
               const root = ReactDOM.createRoot(wrapper);
-              root.render(<Question />);
+              root.render(<React.StrictMode>
+
+                <Question />
+              </React.StrictMode>
+                );
               return { root, wrapper };
             },
             onRemove: (elements) => {

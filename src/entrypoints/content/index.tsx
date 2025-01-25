@@ -4,7 +4,7 @@ import { ContentScriptContext } from 'wxt/client'
 import '~/assets/tailwind.css'
 
 import { Content, isDomainInList } from './Content'
-import { getCurrentDomain } from '@/shared/lib'
+import { getRootDomain } from '@/shared/lib'
 import { siteBadgesInSearchResults } from './siteBadgesInSearchResults'
 
 async function mountReactApp(ctx: ContentScriptContext) {
@@ -46,13 +46,13 @@ export default defineContentScript({
     if (inList) {
       browser.runtime.sendMessage({
         type: 'trackVisit',
-        domain: getCurrentDomain(),
+        domain: getRootDomain(window.location.href),
       })
     }
 
     const canShow = await browser.runtime.sendMessage({
       type: 'canShow',
-      currentDomain: getCurrentDomain(),
+      currentDomain: getRootDomain(window.location.href),
     })
 
     if (inList && canShow) mountReactApp(ctx)

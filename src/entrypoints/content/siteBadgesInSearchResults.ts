@@ -1,4 +1,4 @@
-import { getCurrentDomain, getRootDomain } from '@/shared/lib'
+import { getRootDomain } from '@/shared/lib'
 import { ContentScriptContext } from 'wxt/client'
 import { Domain } from '../background/intervalFetchDomainList'
 import { LOCAL_DOMAINS_LIST } from '../background/constants'
@@ -21,7 +21,7 @@ export function siteBadgesInSearchResults(ctx: ContentScriptContext) {
     anchor: 'body',
     onMount: () => {
       if (doesUrlSearch()) {
-        const currentDomain = getCurrentDomain()
+        const currentDomain = getRootDomain(window.location.href)
         if (currentDomain === 'ya.ru') handleYandexSearch()
         else handleGoogleSearch()
       }

@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/alert-dialog'
-import { getCurrentDomain } from '@/shared/lib'
+import { getRootDomain } from '@/shared/lib'
 
 type Props = {
   text: string
@@ -21,7 +21,7 @@ export default function AlertDialog({ text }: Props) {
   const handleSaveCloseClick = async () => {
     await browser.runtime.sendMessage({
       type: 'saveCloseClick',
-      currentDomain: getCurrentDomain(),
+      currentDomain: getRootDomain(window.location.href),
     })
   }
 
